@@ -1,0 +1,29 @@
+{
+  "name": "npm-pack-all-zip",
+  "version": "0.1.0",
+  "description": "A tool to help you deploy your NPM package to AWS Lambda or Azure Web Apps which includes all of the dependencies of the package by default.",
+  "main": "index.js",
+  "bin": {
+    "npm-pack-all-zip": "bin/index.js"
+  },
+  "author": {
+    "name": "Yeap Ghee Choon",
+    "email": "contact@garyyeap.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/garyyeap/npm-pack-all-zip.git"
+  },
+  "keywords": [
+    "pack",
+    "azure",
+    "lambda",
+    "zip"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "simple-argv": "^2.0.4",
+    "copyfiles": "^2.4.0",
+    "npm-pack-zip": "^1.2.7"
+  }
+}
