@@ -2,4 +2,4 @@
 const argv = require('simple-argv');
 const pack = require('../index');
 
-pack(argv.name, argv['dev-deps']);
+pack(argv.name, argv['dev-deps'], argv['dist']);

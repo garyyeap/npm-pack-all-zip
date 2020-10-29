@@ -22,8 +22,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "simple-argv": "^2.0.4",
+    "archiver-promise": "^1.0.0",
     "copyfiles": "^2.4.0",
-    "npm-pack-zip": "^1.2.7"
+    "npm-packlist": "^1.4.8",
+    "simple-argv": "^2.0.4"
   }
 }
