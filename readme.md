@@ -1,19 +1,20 @@
-A tool to help you deploy your NPM package to AWS Lambda or Azure Web Apps which includes all of the dependencies of the package by default. Build on top of [npm-pack-zip](https://github.com/mwasplund/npm-pack-zip).
+A tool to help you pack your NPM package to a zip file that includes all of the dependencies of the package and ready to deploy to AWS-lambda/Azure Web Apps by default.
 
 ## Usage
 Script
 ```js
 const pack = require('npm-pack-all-zip');
-const devDeps = true;
-const name = 'your-zip-file-name';
+const devDeps = false; // not includes devDependencies
+const name = 'name-from-package-json';
+const dist = './'; // the path relative to the the project
 
-pack(name, devDeps).then(function () {
+pack(name, devDeps, dist).then(function () {
 ....  
 });
 ```
 Cli
 ```
-npm-pack-all-zip --name=your-zip-file-name --dev-deps
+npm-pack-all-zip --name=your-zip-file-name --dist=xxx/xxx --dev-deps
 ```
 
-Note: The `name` arg is optional. It will use the name from `package.json` by default.
+Note: All args are optional. Please check script secion for detail.
