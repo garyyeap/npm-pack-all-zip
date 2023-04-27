@@ -1,7 +1,7 @@
 {
   "name": "npm-pack-all-zip",
-  "version": "0.2.0",
-  "description": "A tool to help you pack your NPM package to a zip file that includes all of the dependencies of the package and ready to deploy to AWS-lambda or Azure Web Apps by default.",
+  "version": "0.3.0",
+  "description": "Pack your NPM project and all its dependencies into a deploy-ready zip file for Lambda(AWS/Azure) with zero configuration required.",
   "main": "index.js",
   "bin": {
     "npm-pack-all-zip": "bin/index.js"
