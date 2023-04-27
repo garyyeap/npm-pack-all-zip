@@ -1,3 +1,9 @@
+![License](https://img.shields.io/npm/l/npm-pack-all-zip?style=for-the-badge)
+![Version](https://img.shields.io/npm/v/npm-pack-all-zip?style=for-the-badge)
+![Node](https://img.shields.io/node/v/npm-pack-all-zip?style=for-the-badge)
+![Downloads](https://img.shields.io/npm/dt/npm-pack-all-zip?style=for-the-badge)
+
+
 Pack your NPM project and all its dependencies into a deploy-ready zip file for Lambda(AWS/Azure) with zero configuration required.
 The core package of [simple-aws-lambda-update](https://www.npmjs.com/package/simple-aws-lambda-update).
 ## Install
