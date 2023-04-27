@@ -9,7 +9,7 @@ function interpolate (str, map) {
   return str.replace(/\${([^}]+)}/g, (_, prop) => map[prop]);
 } 
 
-async function pack (source, destination, name) {
+async function pack (source, destination, name, ignore) {
   const filePath = path.join(destination, `${name}.zip`);
 
   if (!fs.existsSync(destination)) fs.mkdirSync(destination);
@@ -18,7 +18,9 @@ async function pack (source, destination, name) {
   const files = await packlist({ path: source });
   const archive = archiver(filePath);
 
-  files.forEach(function (file) {
+  files.filter(function (file) {
+    return !file.match(ignore);
+  }).forEach(function (file) {
     archive.file(path.join(source, file), { name: file });
   });
 
@@ -31,23 +33,6 @@ module.exports = function (name, devDeps, destination) {
   const PACKAGE_JSON_PATH = path.join(ROOT_DIR, 'package.json');
   const packageJson = require(PACKAGE_JSON_PATH);
 
-  if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR);
-
-  console.info('Backing up `package.json`...');
-
-  fs.copyFileSync(PACKAGE_JSON_PATH, path.join(TEMP_DIR, 'package.json'));
-  console.info('Backup completed');
-
-  packageJson.bundledDependencies = Object.keys(packageJson.dependencies);
-  if (devDeps) {
-    packageJson.bundledDependencies.concat(Object.keys(packageJson.devDependencies));
-  }
-
-  fs.writeFileSync(PACKAGE_JSON_PATH, JSON.stringify(packageJson, null, 4));
-
-  // pack with npm
-  console.info(`Packing dependencies: ${packageJson.bundledDependencies.join(', ')}`);
-
   name = interpolate(name, { 
     name: packageJson.name,
     version: packageJson.version,
@@ -56,7 +41,24 @@ module.exports = function (name, devDeps, destination) {
   name = sanitizeFilename(name || packageJson.name);
   destination = destination ? path.join(ROOT_DIR, destination) : ROOT_DIR;
 
-  return pack(ROOT_DIR, destination, name).then(function () {
+  if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR);
+
+  console.info('Backing up `package.json`...');
+
+  fs.copyFileSync(PACKAGE_JSON_PATH, path.join(TEMP_DIR, 'package.json'));
+  console.info('Backup completed');
+
+  // add `bundledDependencies` to package.json to let packlist includes it
+  packageJson.bundledDependencies = Object.keys(packageJson.dependencies);
+  if (devDeps) {
+    packageJson.bundledDependencies.concat(Object.keys(packageJson.devDependencies));
+  }
+
+  fs.writeFileSync(PACKAGE_JSON_PATH, JSON.stringify(packageJson, null, 4));
+
+  console.info(`Packing dependencies: ${packageJson.bundledDependencies.join(', ')}`);
+
+  return pack(ROOT_DIR, destination, name, '.npm-zip-tmp/').then(function () {
     console.info('Finished packing');
     console.info('Restoring backed up file(s)...');
     
