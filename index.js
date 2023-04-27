@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const copyfiles = require('copyfiles');
 const packlist = require('npm-packlist');
 const archiver = require('archiver-promise');
 
