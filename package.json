@@ -25,6 +25,7 @@
   "dependencies": {
     "archiver-promise": "^1.0.0",
     "npm-packlist": "^1.4.8",
+    "sanitize-filename": "^1.6.3",
     "simple-argv": "^2.0.4"
   }
 }

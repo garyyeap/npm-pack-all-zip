@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const packlist = require('npm-packlist');
 const archiver = require('archiver-promise');
+const sanitizeFilename = require('sanitize-filename');
 
 async function pack (source, destination, name) {
   if (!fs.existsSync(destination)) fs.mkdirSync(destination);
@@ -45,17 +46,19 @@ module.exports = function (name, devDeps, destination) {
   // pack with npm
   console.info(`Packing dependencies: ${packageJson.bundledDependencies.join(', ')}`);
 
-  name = name || packageJson.name;
+  name = sanitizeFilename(name || packageJson.name);
   destination = destination ? path.join(ROOT_DIR, destination) : ROOT_DIR;
 
   return pack(ROOT_DIR, destination, name).then(function () {
     console.info('Finished packing');
     console.info('Restoring backup files...');
+    
     FILES_TO_BACKUP.forEach(function (file) {
       const sourceFile = path.join(TEMP_DIR, file);
       if (!fs.existsSync(sourceFile)) return;
       fs.renameSync(sourceFile, path.join(ROOT_DIR, file));
     });
+    
     fs.rmdirSync(TEMP_DIR);
     console.info('Restored');
   });
