@@ -1,6 +1,6 @@
 {
   "name": "npm-pack-all-zip",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Pack your NPM project and all its dependencies into a deploy-ready zip file for Lambda(AWS/Azure) with zero configuration required.",
   "main": "index.js",
   "bin": {

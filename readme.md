@@ -1,8 +1,29 @@
 Pack your NPM project and all its dependencies into a deploy-ready zip file for Lambda(AWS/Azure) with zero configuration required.
-
+The core package of [simple-aws-lambda-update](https://www.npmjs.com/package/simple-aws-lambda-update).
+## Install
+### NPM
+Project scoped(script/cli)
+```
+npm install npm-pack-all-zip --dev
+```
+Global(cli)
+```
+npm install npm-pack-all-zip -g
+```
+### Yarn
+Project scoped(script/cli)
+```
+yarn add npm-pack-all-zip --dev
+```
+Global(cli)
+```
+yarn global add npm-pack-all-zip
+```
 ## Usage
 ### Script
 ```js
+const pack = require('npm-pack-all-zip');
+
 pack().then(function () {
 ....  
 });
