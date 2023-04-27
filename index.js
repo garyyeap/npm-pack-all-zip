@@ -5,10 +5,13 @@ const archiver = require('archiver-promise');
 const sanitizeFilename = require('sanitize-filename');
 
 async function pack (source, destination, name) {
+  const filePath = path.join(destination, `${name}.zip`);
+
   if (!fs.existsSync(destination)) fs.mkdirSync(destination);
+  if (fs.existsSync(filePath)) fs.rmSync(filePath);// archiver doesn't work if same name file exists. 
 
   const files = await packlist({ path: source });
-  const archive = archiver(path.join(destination, `${name}.zip`));
+  const archive = archiver(filePath);
 
   files.forEach(function (file) {
     archive.file(path.join(source, file), { name: file });
@@ -19,21 +22,15 @@ async function pack (source, destination, name) {
 
 module.exports = function (name, devDeps, destination) {
   const ROOT_DIR = process.cwd();
-  const FILES_TO_BACKUP = ['package.json', 'package-lock.json', 'yarn.lock', '.npmignore'];
   const TEMP_DIR = path.join(ROOT_DIR, '.npm-zip-tmp');
   const PACKAGE_JSON_PATH = path.join(ROOT_DIR, 'package.json');
   const packageJson = require(PACKAGE_JSON_PATH);
 
   if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR);
 
-  console.info('Backing up files...');
-  FILES_TO_BACKUP.forEach(function (file) {
-    const sourceFile = path.join(ROOT_DIR, file);
-    if (!fs.existsSync(sourceFile)) return;
+  console.info('Backing up `package.json`...');
 
-    fs.copyFileSync(sourceFile, path.join(TEMP_DIR, file));
-  });
-
+  fs.copyFileSync(PACKAGE_JSON_PATH, path.join(TEMP_DIR, 'package.json'));
   console.info('Backup completed');
 
   packageJson.bundledDependencies = Object.keys(packageJson.dependencies);
@@ -51,15 +48,15 @@ module.exports = function (name, devDeps, destination) {
 
   return pack(ROOT_DIR, destination, name).then(function () {
     console.info('Finished packing');
-    console.info('Restoring backup files...');
+    console.info('Restoring backed up file(s)...');
     
-    FILES_TO_BACKUP.forEach(function (file) {
-      const sourceFile = path.join(TEMP_DIR, file);
-      if (!fs.existsSync(sourceFile)) return;
-      fs.renameSync(sourceFile, path.join(ROOT_DIR, file));
-    });
+    const sourceFile = path.join(TEMP_DIR, 'package.json');
     
-    fs.rmdirSync(TEMP_DIR);
+    if (fs.existsSync(sourceFile)) {
+      fs.renameSync(sourceFile, PACKAGE_JSON_PATH);
+    }
+
+    fs.rmdirSync(TEMP_DIR, { recursive: true });
     console.info('Restored');
   });
 };
